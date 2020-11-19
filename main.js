@@ -85,18 +85,32 @@ document.addEventListener("DOMContentLoaded", function(event) {
     groupButtons.appendChild(buttonDelete);
 
     // após eu ter feito todo o componente de text vou limpar o input    
-    document.querySelector('.input-text').value = ''
+    document.querySelector('.input-text').value = '';
+
+    var removeTask = document.querySelectorAll('.task');
+
+    removeTask.forEach(function(value, index){
+     value.addEventListener('click', function(item) {
+       if(item.target.className === 'button-delete'){
+        value.remove(item)
+       }
+     });
+    });
+
+    var editTask = document.querySelectorAll('.task');
+
+    editTask.forEach(function(value, index){
+      value.addEventListener('click', function(item){
+        const armazenaDiv = item.currentTarget.firstChild;
+        const armazenaText = item.currentTarget.firstChild.innerText;
+        if(item.target.className === 'button-edit'){
+          item.currentTarget.firstChild.innerHTML = '<input  class="input-text" value="'+armazenaText+'">';
+        }
+        console.log(item);
+
+      })
+    })
   };
-
-  var removeTask = document.querySelectorAll('.button-delete');
-  removeTask.forEach(function(value, index){
-   value.addEventListener('click', function(item) {
-    console.log(item);
-   })
-    console.log(value);
-    console.log(index);
-  })
-
 
 
 });
