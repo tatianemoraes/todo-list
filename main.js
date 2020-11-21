@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // chamei o add task e coloquei nele uma função click que toda vez
   // que eu clicar nele, irá gerar dinamicamente toda uma estrutura nova 
   // de tarefa com uma série de estilos e regras
+
   addNewItem.onclick = function() {
 
     // vou ver quantas tarefas ja existem
@@ -18,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // chamei a div criada e adicionei um atributo class com nome task
     divTasks.setAttribute('class','task');
 
-    // estou adicionando a posição de cada tqask nova
+    // estou adicionando a posição de cada task nova
     divTasks.setAttribute('id', quantityTasks+1);
     
     // esta div é a div que vai receber o texto digitado
@@ -30,14 +31,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // este é o texto digitado
     var textInput = document.querySelector('.input-text').value;
 
-    // esta é a div de grupo de botoes, que conterá 02 botoes
+    // se o text input estiver vazio não poderá adicionar nada;
+    if(textInput === '') {
+      return;
+    }
+
+    // esta é a div de grupo de botões, que conterá 02 botões
     var groupButtons = document.createElement('div');
 
     // chamei a div criada e adicionei um atributo class com nome group-bottons
     groupButtons.setAttribute('class','group-buttons');
 
     // este botão será um dos botões que ficará dentro da div group-buttons
-    // este botao irá ter a possibilidade de editar o texto que foi adicionado
+    // este botão irá ter a possibilidade de editar o texto que foi adicionado
     var buttonEdit = document.createElement('button'); 
 
     // chamei o botão criado e adicionei um atributo class com nome button-edit
@@ -47,9 +53,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // selecionado no meu click edit
     buttonEdit.setAttribute('value', quantityTasks+1);
 
-    // este botão será um botão secundario que também irá ficar dentro da div
+    // este botão será um botão secundário que também irá ficar dentro da div
     // group buttons
-    // este botao irá ter a possibilidade de remover o texto criado
+    // este botão irá ter a possibilidade de remover o texto criado
     var buttonDelete = document.createElement('button');
 
     // chamei o botão criado e adicionei um atributo class com nome 
@@ -74,11 +80,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // agora coloquei o texto digitado dentro da div acima
     divForTextInputed.append(textInput);
 
-    // aqui agora procurei pela div task e após encontrá-la, adicionei
-    // a div de grupo de botoes dentro dela
+    // agora procurei pela div task e após encontrá-la, adicionei
+    // a div de grupo de botões dentro dela
     divTasks.appendChild(groupButtons);
 
-    //após ter adicionado a div de botões dentro da div task, agora dentro
+    // após ter adicionado a div de botões dentro da div task, dentro
     // da div group buttons que já foi inserida na DOM, vou adicionar o
     // botão edit e delete
     groupButtons.appendChild(buttonEdit);
@@ -97,21 +103,46 @@ document.addEventListener("DOMContentLoaded", function(event) {
      });
     });
 
+
     var editTask = document.querySelectorAll('.task');
 
-    editTask.forEach(function(value, index){
+    var oldText = '';
+    var newText = '';
+
+    editTask.forEach(function(value){
       value.addEventListener('click', function(item){
-        const armazenaDiv = item.currentTarget.firstChild;
-        const armazenaText = item.currentTarget.firstChild.innerText;
-        if(item.target.className === 'button-edit'){
-          item.currentTarget.firstChild.innerHTML = '<input  class="input-text" value="'+armazenaText+'">';
+
+        // se o texto estiver vazio ele recebe o parametro digitado
+        if(oldText === '') {
+          oldText = item.currentTarget.firstChild.innerText;
         }
-        console.log(item);
+        
+        //se clicar no editar irá mudar a estrutura toda inline selecionada
+        if(item.target.className === 'button-edit'){
+          item.currentTarget.firstChild.innerHTML 
+          = '<input  class="input-text-edit" value="'+oldText+'">';
+          item.path[1].innerHTML 
+          = '<button class="button-confirm"></button> <button class="button-cancel"></button>';
+        }
 
-      })
-    })
+        //se clicar no cancelar faça isso
+        if(item.target.className === 'button-cancel'){
+          item.currentTarget.firstChild.innerHTML 
+          = '<div class="task-text">'+ oldText +'</div>';
+          item.path[1].innerHTML 
+          = '<button class="button-edit"></button> <button class="button-delete"></button>'; 
+        }
+        // se clicar no confirm salvará o texto novo digitado
+        if(item.target.className === 'button-confirm') {
+          newText = document.querySelector('.input-text-edit').value;
+          item.currentTarget.firstChild.innerHTML 
+          = '<div class="task-text">'+ newText +'</div>';
+          item.path[1].innerHTML 
+          = '<button class="button-edit"></button> <button class="button-delete"></button>';
+          oldText = newText;
+        }
+      });
+    });
   };
-
-
 });
 
